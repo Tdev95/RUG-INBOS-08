@@ -83,52 +83,23 @@ int cmp(const void * a, const void * b){
 	return result;
 }
 
-void bar(){
-	for(int i=0; i<fcnt; i++){
-		printf("%s\n", flist[i]);	
-	}
-}
-
-void bar2(){
+//prints results using flist
+void print(){
+	int i, j, k;
 	if(fcnt){
-		printf("\"./%s\"", flist[0]);
-		for(int i=0; i<fcnt-1; i++){
-			if(cmp(&flist[i], &flist[i+1])){
-				printf("\n\"./%s\"", flist[i+1]);
-			} else {
-				printf(" \"./%s\"", flist[i+1]);
+		for(i=0; i<fcnt-1; i++){
+			for(j=i; j+1<fcnt && cmp(&flist[i], &flist[j+1]) == 0; j++){
+				;
+			}
+			//j moves
+			while(i < j){
+				for(k=i+1; k<=j; k++){
+					printf("\"./%s\" \"./%s\"\n", flist[i], flist[k]);
+				}
+				i++;
 			}
 		}
 	}
-	return;
-}
-
-
-void bar3(){
-	int i;
-	int flag = false;
-
-	if(fcnt){
-		for(int i=0; i<fcnt-1; i++){
-			if(cmp(&flist[i], &flist[i+1])){
-				if(flag){
-					printf(" \"./%s\"\n", flist[i]);
-					flag = false;	
-				}
-			} else {
-				if(flag){
-					printf(" \"./%s\"", flist[i]);				
-				} else {
-					printf("\"./%s\"", flist[i]);
-					flag = true;
-				}
-			}
-		}
-		if(flag){
-			printf(" \"./%s\"\n", flist[i]);
-		}
-	}
-	return;
 }
 
 // locate files, store in flist
@@ -213,8 +184,8 @@ int main (int argc, char **argv) {
 	qsort(flist, fcnt, sizeof(char *), cmp);
 	
 	// print result
-	cmp_names = false;
-	bar3();
+	cmp_names = false; //ignore names when comparing files
+	print();
 
 	// free memory
 	for(int i=0; i<FMAX; i++){
